@@ -25,6 +25,7 @@ except ImportError:
   from StringIO import StringIO
 
 from os import environ
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from graphite.account.models import Profile
@@ -127,4 +128,7 @@ else:
     def loads(cls, pickle_string):
       return cls(StringIO(pickle_string)).load()
 
-unpickle = SafeUnpickler
+if settings.USE_INSECURE_UNPICKLER:
+  unpickle = pickle
+else:
+  unpickle = SafeUnpickler
